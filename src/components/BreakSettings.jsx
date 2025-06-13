@@ -1,9 +1,6 @@
 import { useState } from "react"
 
 function BreakInfo({ id, label, name, value, updateBreak }) {
-    const handleChange = (e) => {
-        console.log("in handleChange");
-    }
     return (
         <div className="break-info">
             <label>{label}</label>
@@ -13,20 +10,6 @@ function BreakInfo({ id, label, name, value, updateBreak }) {
 }
 export default function BreakSettings({ breakList, updateBreak, adjustBreakNum }) {
     const [numBreaks, setNumBreaks] = useState(6);
-
-    // const getBreakList = () => {
-    //     const breaks = [...breakList];
-    //     let nextID = breakList.length + 1;
-    //     while (breaks.length < numBreaks) {
-    //         breaks.push({ id: nextID, daily: "", prayer: "", movement: "" });
-    //         nextID++;
-    //     }
-    //     while (breaks.length > numBreaks) {
-    //         breaks.pop();
-    //     }
-
-    //     return breaks;
-    // }
 
     const handleChangeBreaks = (e) => {
         setNumBreaks(e.target.value);

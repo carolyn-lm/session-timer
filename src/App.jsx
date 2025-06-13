@@ -3,7 +3,6 @@ import './App.css'
 import Verses from './components/Verses'
 import Timer from './components/Timer';
 import TimerButtons from './components/TimerButtons';
-import BreakList from './components/BreakList';
 import { useSound } from 'react-sounds';
 import Header from './components/Header';
 import BreakSettings from './components/BreakSettings';
@@ -103,11 +102,11 @@ function App() {
   const adjustBreakNum = (newNum) => {
     const breaks = [...breakList];
     let nextID = breakList.length + 1;
-    while (breaks.length < numBreaks) {
+    while (breaks.length < newNum) {
       breaks.push({ id: nextID, daily: "", prayer: "", movement: "" });
       nextID++;
     }
-    while (breaks.length > numBreaks) {
+    while (breaks.length > newNum) {
       breaks.pop();
     }
     setBreakList(breaks);
