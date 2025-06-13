@@ -1,6 +1,9 @@
 import { useState } from "react"
 
 function BreakInfo({ id, label, name, value, updateBreak }) {
+    const handleChange = (e) => {
+        console.log("in handleChange");
+    }
     return (
         <div className="break-info">
             <label>{label}</label>
@@ -8,29 +11,35 @@ function BreakInfo({ id, label, name, value, updateBreak }) {
         </div>
     )
 }
-export default function BreakSettings({ breakList, updateBreak }) {
+export default function BreakSettings({ breakList, updateBreak, adjustBreakNum }) {
     const [numBreaks, setNumBreaks] = useState(6);
 
-    const getBreakList = () => {
-        const breaks = [...breakList];
-        let nextID = breakList.length + 1;
-        while (breaks.length < numBreaks) {
-            breaks.push({ id: nextID, daily: "", prayer: "", movement: "" });
-            nextID++;
-        }
-        while (breaks.length > numBreaks) {
-            breaks.pop();
-        }
-        return breaks;
+    // const getBreakList = () => {
+    //     const breaks = [...breakList];
+    //     let nextID = breakList.length + 1;
+    //     while (breaks.length < numBreaks) {
+    //         breaks.push({ id: nextID, daily: "", prayer: "", movement: "" });
+    //         nextID++;
+    //     }
+    //     while (breaks.length > numBreaks) {
+    //         breaks.pop();
+    //     }
+
+    //     return breaks;
+    // }
+
+    const handleChangeBreaks = (e) => {
+        setNumBreaks(e.target.value);
+        adjustBreakNum(e.target.value);
     }
 
     return (
         <div>
             <h2>Break Settings</h2>
             <h3>Number of Breaks</h3>
-            <input type="number" value={numBreaks} onChange={(e) => setNumBreaks(e.target.value)} />
-            {getBreakList().map(brItem => (
-                <div className="break-items"> <h3>BREAK {brItem.id} </h3>
+            <input type="number" value={numBreaks} onChange={handleChangeBreaks} />
+            {breakList.map(brItem => (
+                <div className="break-items" key={brItem.id}> <h3>BREAK {brItem.id} </h3>
                     <BreakInfo id={brItem.id} label="Daily Verse" name="daily" value={brItem.daily} updateBreak={updateBreak} />
                     <BreakInfo id={brItem.id} label="Movement" name="movement" value={brItem.movement} updateBreak={updateBreak} />
                     <BreakInfo id={brItem.id} label="Prayer" name="prayer" value={brItem.prayer} updateBreak={updateBreak} />

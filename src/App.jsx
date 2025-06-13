@@ -16,13 +16,13 @@ const placeholderVerses = [
   { id: 4, text: "", placeholder: "Affirmation for today" }
 ];
 
-const startingChecklist = [
-  { id: 1, text: "Beloved & Hymn", completed: false },
-  { id: 2, text: "DP & Daily", completed: false },
-  { id: 3, text: "6T & Idea", completed: false },
-  { id: 4, text: "LP & Quality", completed: false },
-  { id: 5, text: "SSB & Advice", completed: false },
-  { id: 6, text: "RMA & Topic", completed: false },
+const startingBreakList = [
+  { id: 1, daily: "", prayer: "", movement: "" },
+  { id: 2, daily: "", prayer: "", movement: "" },
+  { id: 3, daily: "", prayer: "", movement: "" },
+  { id: 4, daily: "", prayer: "", movement: "" },
+  { id: 5, daily: "", prayer: "", movement: "" },
+  { id: 6, daily: "", prayer: "", movement: "" },
 ];
 
 function App() {
@@ -30,7 +30,7 @@ function App() {
   const [verses, setVerses] = useState(JSON.parse(window.localStorage.getItem("verses")) || placeholderVerses);
   const [timeRemaining, setTimeRemaining] = useState(3000);
   const [isTimerActive, setIsTimerActive] = useState(false);
-  const [breakList, setBreakList] = useState(JSON.parse(window.localStorage.getItem("breaks")) || []);
+  const [breakList, setBreakList] = useState(JSON.parse(window.localStorage.getItem("breaks")) || startingBreakList);
   const [currentBreak, setCurrentBreak] = useState(JSON.parse(window.localStorage.getItem("currentBreak")) || 0);
 
   const { play } = useSound('notification/completed');
@@ -100,6 +100,19 @@ function App() {
     setIsTimerActive(!isTimerActive);
   }
 
+  const adjustBreakNum = (newNum) => {
+    const breaks = [...breakList];
+    let nextID = breakList.length + 1;
+    while (breaks.length < numBreaks) {
+      breaks.push({ id: nextID, daily: "", prayer: "", movement: "" });
+      nextID++;
+    }
+    while (breaks.length > numBreaks) {
+      breaks.pop();
+    }
+    setBreakList(breaks);
+  }
+
   const updateBreak = (breakId, field, newValue) => {
     const updatedBreakList = breakList.map((item) => {
       if (item.id === breakId) {
@@ -123,12 +136,10 @@ function App() {
         <Verses mode={mode} verseList={verses} updateVerse={updateVerse} resetVerses={resetVerses} />
         {mode === "session" && <Timer timeRemaining={timeRemaining} toggleTimer={toggleTimer} />}
         {mode === "session" && <TimerButtons setTimer={setTimer} />}
-        {mode === "settings" && <BreakSettings breakList={breakList} updateBreak={updateBreak} />}
+        {mode === "settings" && <BreakSettings breakList={breakList} updateBreak={updateBreak} adjustBreakNum={adjustBreakNum} />}
         {mode === "break" && <BreakView currentBreak={breakList[currentBreak]} numBreaks={breakList.length} nextBreak={nextBreak} />}
       </main>
-      {/* <aside>
-        <BreakList breakList={breakList} updateBreak={updateBreak} resetBreaks={resetBreaks} />
-      </aside> */}
+
     </div>
   )
 }
