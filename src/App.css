@@ -1,0 +1,171 @@
+/* define colors */
+:root {
+  --background-color: #7B6D8D;
+  --text-color: floralwhite;
+  --highlight1: #8499B1;
+  --highlight2: #A5C4D4;
+  --button-color: #593F62;
+  box-sizing: border-box;
+}
+
+/* Page styles */
+body {
+  background-color: var(--background-color);
+  color: var(--text-color)
+}
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.App {
+  min-height: 100vh;
+  display: flex;
+  justify-content: space-between;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+/*** Verses ***/
+.verse {
+  font-size: 35px;
+  font-weight: bold;
+  padding: 10px;
+  background-color: var(--highlight2);
+}
+
+.verse:first-child {
+  background-color: var(--highlight1);
+  font-size: 40px;
+}
+
+.edit-verse {
+  display: block;
+  width: 400px;
+  height: 50px;
+  margin: 10px;
+}
+
+/*** Timer ***/
+.timer {
+  text-align: center;
+}
+
+.timer-display {
+  font-size: 200px;
+  font-family: "Lucida Console", monospace;
+  margin: 10px;
+}
+
+.timer-button {
+  margin: 10px;
+  background-color: var(--button-color);
+  color: var(--text-color);
+}
+
+.fa-solid {
+  margin: 2px;
+}
+
+/*** Timer Buttons ***/
+.button-container {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+/*** Breaks ***/
+#break-view {
+  display: flex;
+  flex-direction: column;
+}
+
+#break-view button {
+  margin-top: 20px;
+  width: 100px;
+}
+
+.break {
+  margin: 10px;
+  line-height: 1.25;
+  font-size: 20px;
+}
+
+.break label {
+  margin-left: 5px;
+}
+
+input[type=checkbox] {
+  accent-color: var(--highlight2);
+}
+
+.break-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.break-info {
+  display: flex;
+  justify-content: space-between;
+  width: 300px;
+}
+
+/* ToggleSwitch */
+.toggle-shadow {
+  width: 50%;
+  height: 100%;
+  position: absolute;
+  border-radius: 2rem;
+  background: var(--highlight1);
+  z-index: -10;
+  transition: ease-in-out 0.2s;
+}
+
+.toggle-switch {
+  text-transform: uppercase;
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: solid 2px var(--highlight1);
+  border-radius: 2rem;
+}
+
+.toggle-switch label {
+  flex-grow: 1;
+  text-align: center;
+  padding: 0.5rem;
+  border-radius: 2rem;
+  cursor: pointer;
+}
+
+.toggle-switch input[type="radio"] {
+  display: none;
+}
+
+.toggle-switch input[type="radio"]:checked+label {
+  font-weight: bold;
+}
+
+input[type="radio"]:checked+label {
+  background-color: var(--highlight2);
+}
+
+.app-header {
+  display: flex;
+  gap: 20px;
+}
+
+/* #session:checked~.toggle-shadow {
+  left: 0;
+}
+
+#break:checked~.toggle-shadow {
+  left: 50%;
+} */
