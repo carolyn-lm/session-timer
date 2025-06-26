@@ -89,7 +89,7 @@ main {
   width: 100px;
 }
 
-.break {
+.checkbox {
   margin: 10px;
   line-height: 1.25;
   font-size: 20px;
@@ -161,11 +161,3 @@ input[type="radio"]:checked+label {
   display: flex;
   gap: 20px;
 }
-
-/* #session:checked~.toggle-shadow {
-  left: 0;
-}
-
-#break:checked~.toggle-shadow {
-  left: 50%;
-} */

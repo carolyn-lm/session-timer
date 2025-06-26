@@ -1,5 +1,6 @@
 import { useState } from "react"
 
+// One break item - includes text input and label
 function BreakInfo({ id, label, name, value, updateBreak }) {
     return (
         <div className="break-info">
@@ -8,6 +9,8 @@ function BreakInfo({ id, label, name, value, updateBreak }) {
         </div>
     )
 }
+
+// Used in Settings mode. Gives options for number of breaks and then set movement & prayer for each break
 export default function BreakSettings({ breakList, updateBreak, adjustBreakNum }) {
     const [numBreaks, setNumBreaks] = useState(6);
 
@@ -23,7 +26,6 @@ export default function BreakSettings({ breakList, updateBreak, adjustBreakNum }
             <input type="number" value={numBreaks} onChange={handleChangeBreaks} />
             {breakList.map(brItem => (
                 <div className="break-items" key={brItem.id}> <h3>BREAK {brItem.id} </h3>
-                    <BreakInfo id={brItem.id} label="Daily Verse" name="daily" value={brItem.daily} updateBreak={updateBreak} />
                     <BreakInfo id={brItem.id} label="Movement" name="movement" value={brItem.movement} updateBreak={updateBreak} />
                     <BreakInfo id={brItem.id} label="Prayer" name="prayer" value={brItem.prayer} updateBreak={updateBreak} />
                 </div>

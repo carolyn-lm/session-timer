@@ -1,5 +1,6 @@
 import ToggleSwitch from './ToggleSwitch';
 
+// App Header. Shows header and Done button in settings mode, otherwise has toggle switch and gear icon for switching between modes
 export default function Header({ mode, setMode }) {
     return (
         <>

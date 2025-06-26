@@ -1,4 +1,4 @@
-
+// Single verse. Textarea if in edit mode (settings), otherwise just a paragraph
 function Verse({ verse, isEditMode, updateVerse }) {
 
     const handleChange = (e) => {
@@ -14,15 +14,16 @@ function Verse({ verse, isEditMode, updateVerse }) {
     )
 }
 
-export default function Verses({ mode, verseList, updateVerse }) {
+// Displays verses as appropriate depending on mode
+export default function Verses({ mode, verseList, updateVerse, resetVerses }) {
     const isEditMode = mode === "settings";
 
     return (
         <>
-            {mode === "session" ?
-                // For session mode, just display first verse
+            {mode === "session" || mode === "break" ?
+                // For session & break mode, just display first verse
                 (<Verse key={verseList[0].id} verse={verseList[0]} isEditMode={false} />) :
-                // Break or settings mode, display all verses
+                // movement or settings mode, display all verses
                 <div>
                     {verseList.map(verse => <Verse key={verse.id} verse={verse} isEditMode={isEditMode} updateVerse={updateVerse} />)}
 

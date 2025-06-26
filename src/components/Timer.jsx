@@ -1,3 +1,4 @@
+// Timer display, shows count down of minutes and seconds and start/stop button
 export default function Timer({ timeRemaining, toggleTimer }) {
     const minutes = Math.floor(timeRemaining / 60);
     const seconds = timeRemaining % 60;

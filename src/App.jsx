@@ -7,6 +7,7 @@ import { useSound } from 'react-sounds';
 import Header from './components/Header';
 import BreakSettings from './components/BreakSettings';
 import BreakView from './components/BreakView';
+import MovementView from './components/MovementView';
 
 const placeholderVerses = [
   { id: 1, text: "", placeholder: "Verse of the week" },
@@ -16,24 +17,33 @@ const placeholderVerses = [
 ];
 
 const startingBreakList = [
-  { id: 1, daily: "", prayer: "", movement: "" },
-  { id: 2, daily: "", prayer: "", movement: "" },
-  { id: 3, daily: "", prayer: "", movement: "" },
-  { id: 4, daily: "", prayer: "", movement: "" },
-  { id: 5, daily: "", prayer: "", movement: "" },
-  { id: 6, daily: "", prayer: "", movement: "" },
+  { id: 1, prayer: "", movement: "" },
+  { id: 2, prayer: "", movement: "" },
+  { id: 3, prayer: "", movement: "" },
+  { id: 4, prayer: "", movement: "" },
+  { id: 5, prayer: "", movement: "" },
+  { id: 6, prayer: "", movement: "" },
 ];
 
 function App() {
+  // mode determines what is displayed: session, movement, break, or settings
   const [mode, setMode] = useState("session");
+  // List of verses. First verse always displayed, all verses displayed in movement mode, can edit in settings mode, saved to local storage
   const [verses, setVerses] = useState(JSON.parse(window.localStorage.getItem("verses")) || placeholderVerses);
+  // for timer in session mode
   const [timeRemaining, setTimeRemaining] = useState(3000);
   const [isTimerActive, setIsTimerActive] = useState(false);
+  // list of breaks for break mode
   const [breakList, setBreakList] = useState(JSON.parse(window.localStorage.getItem("breaks")) || startingBreakList);
-  const [currentBreak, setCurrentBreak] = useState(JSON.parse(window.localStorage.getItem("currentBreak")) || 0);
+  // list of completed breaks - saved to local storage
+  const [completedBreaks, setCompletedBreaks] = useState(JSON.parse(window.localStorage.getItem("completedBreaks")) || []);
+  // list of completed daily verses - used in movement mode
+  const [completedDaily, setCompletedDaily] = useState(JSON.parse(window.localStorage.getItem("completedDaily")) || []);
 
+  // Sound to play when timer completes
   const { play } = useSound('notification/completed');
 
+  // Save state to local storage when updated
   useEffect(() => {
     window.localStorage.setItem("verses", JSON.stringify(verses));
   }, [verses]);
@@ -43,10 +53,14 @@ function App() {
   }, [breakList]);
 
   useEffect(() => {
-    window.localStorage.setItem("currentBreak", JSON.stringify(currentBreak));
-  }, [currentBreak]);
+    window.localStorage.setItem("completedBreaks", JSON.stringify(completedBreaks));
+  }, [completedBreaks]);
 
+  useEffect(() => {
+    window.localStorage.setItem("completedDaily", JSON.stringify(completedDaily));
+  }, [completedDaily]);
 
+  // Update display for timer
   useEffect(() => {
     let intervalId;
 
@@ -70,6 +84,8 @@ function App() {
     return () => clearInterval(intervalId);
   }, [isTimerActive]);
 
+  // *** Helper functions for Verses ***
+  // update verse list 
   const updateVerse = (verseId, newText) => {
     const updatedVerseList = verses.map((verse) => {
       if (verse.id === verseId) {
@@ -80,17 +96,20 @@ function App() {
     setVerses(updatedVerseList);
   }
 
+  // Reset verses 
   const resetVerses = (dailyOnly) => {
-    console.log("reset", dailyOnly);
-    const updatedVerseList = verses.map((verse) => {
-      if (!dailyOnly || (dailyOnly && verse.id != 1)) {
-        verse.text = "";
-      }
-      return verse;
-    });
+    console.log("resetting verses");
+    // reset all verses
+    let updatedVerseList = placeholderVerses;
+    if (dailyOnly) {
+      // if daily only, then keep first verse
+      updatedVerseList[0] = verses[0];
+    }
+    console.log("new verses", updatedVerseList);
     setVerses(updatedVerseList);
   }
 
+  // *** Helper functions for Timer ***
   const setTimer = (minutes) => {
     setTimeRemaining(minutes * 60);
   }
@@ -99,6 +118,22 @@ function App() {
     setIsTimerActive(!isTimerActive);
   }
 
+  // *** Common Helper functions ***
+  // Used to update both completed lists (daily and breaks)
+  const updateList = (list, item) => {
+    let updatedList;
+    // If item is already on list, then remove it
+    if (list.includes(item)) {
+      updatedList = list.filter((listItem) => listItem !== item);
+    } else {
+      // otherwise, add item to list
+      updatedList = [...list, item];
+    }
+    return updatedList;
+
+  }
+
+  // *** Helper functions for Breaks ***
   const adjustBreakNum = (newNum) => {
     const breaks = [...breakList];
     let nextID = breakList.length + 1;
@@ -122,11 +157,25 @@ function App() {
     setBreakList(updatedBreakList);
   }
 
-  const nextBreak = () => {
-    const nextNum = (currentBreak === breakList.length - 1) ? 0 : currentBreak + 1;
-    setCurrentBreak(nextNum);
-    setMode("session");
+  const toggleBreak = (breakItem) => {
+    setCompletedBreaks(updateList(completedBreaks, breakItem));
   }
+
+  const resetBreaks = () => {
+    setCompletedBreaks([]);
+  }
+
+  // *** Helper functions for Movement ***
+
+  const toggleDaily = (daily) => {
+    setCompletedDaily(updateList(completedDaily, daily));
+  }
+
+  const resetDaily = () => {
+    setCompletedDaily([]);
+  }
+
+
 
   return (
     <div className='App'>
@@ -136,7 +185,8 @@ function App() {
         {mode === "session" && <Timer timeRemaining={timeRemaining} toggleTimer={toggleTimer} />}
         {mode === "session" && <TimerButtons setTimer={setTimer} />}
         {mode === "settings" && <BreakSettings breakList={breakList} updateBreak={updateBreak} adjustBreakNum={adjustBreakNum} />}
-        {mode === "break" && <BreakView currentBreak={breakList[currentBreak]} numBreaks={breakList.length} nextBreak={nextBreak} />}
+        {mode === "break" && <BreakView breakList={breakList} completedBreaks={completedBreaks} toggleBreak={toggleBreak} resetBreaks={resetBreaks} />}
+        {mode === "movement" && <MovementView completedDaily={completedDaily} toggleDaily={toggleDaily} resetDaily={resetDaily} />}
       </main>
 
     </div>
